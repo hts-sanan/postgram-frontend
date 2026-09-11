@@ -1,0 +1,82 @@
+.wrapper {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.formPane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.heroPane {
+  display: none;
+  position: relative;
+  padding: var(--spacing-2xl);
+  margin: 15px 15px 15px 0;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #a39ef9 0%, #4f46e5 100%);
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  .heroPane {
+    display: flex;
+  }
+}
+
+.heroBrand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  position: absolute;
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+  z-index: 2;
+}
+
+.heroLogo {
+  width: 155px;
+  height: auto;
+}
+
+.heroCopy {
+  position: absolute;
+  top: 132px;
+  left: var(--spacing-2xl);
+  z-index: 2;
+  max-width: 390px;
+}
+
+.heroHeadline {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  line-height: var(--line-height-tight);
+  max-width: 340px;
+  margin: 0;
+}
+
+.heroSubtext {
+  margin-top: var(--spacing-xs);
+  color: var(--color-text-primary);
+  max-width: 420px;
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-base);
+}
+
+.previewImage {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(76%, 520px);
+  height: auto;
+}
