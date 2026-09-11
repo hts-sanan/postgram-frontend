@@ -1,0 +1,68 @@
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.header {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.avatar,
+.lineShort,
+.lineShorter,
+.lineFull,
+.image {
+  background: linear-gradient(90deg, var(--color-background) 25%, var(--color-border) 37%, var(--color-background) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: var(--radius-sm);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  flex: 1;
+}
+
+.lineShort {
+  height: 12px;
+  width: 40%;
+}
+
+.lineShorter {
+  height: 10px;
+  width: 25%;
+}
+
+.lineFull {
+  height: 12px;
+  width: 90%;
+}
+
+.image {
+  height: 220px;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}

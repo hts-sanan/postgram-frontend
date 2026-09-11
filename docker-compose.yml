@@ -1,0 +1,27 @@
+# Local development setup shared by the whole team.
+# Usage:
+#   docker compose up          # start the dev server with hot reload at http://localhost:5173
+#   docker compose up --build  # rebuild after dependency changes (package.json / lockfile)
+#   docker compose down        # stop and remove the container
+#
+# The service target is `dev` (see Dockerfile) so everyone gets the same
+# Node version and dependency set regardless of their host machine.
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - '5173:5173'
+    volumes:
+      # Mount source for hot reload...
+      - .:/app
+      # ...but keep node_modules from the image, not the host, to avoid
+      # platform/arch mismatches (e.g. macOS host, linux container).
+      - /app/node_modules
+    environment:
+      - VITE_USE_MOCKS=${VITE_USE_MOCKS:-true}
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-}
+    stdin_open: true
+    tty: true

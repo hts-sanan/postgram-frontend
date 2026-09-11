@@ -1,0 +1,58 @@
+.card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+}
+
+.name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.username {
+  color: var(--color-text-muted);
+}
+
+.bio {
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-2xs);
+}
+
+.editBioButton {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--color-text-link);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  padding: 0;
+  margin-top: var(--spacing-2xs);
+}
+
+.bioForm {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-2xs);
+}
+
+.bioInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.birthDate {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+}

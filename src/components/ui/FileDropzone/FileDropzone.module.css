@@ -1,0 +1,49 @@
+.dropzone {
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-background);
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--spacing-sm);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.dropzoneActive {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary-hover);
+}
+
+.icon {
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-2xs);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.primaryButton {
+  padding: 0.65rem 1.5rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.primaryButton:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.hiddenInput {
+  display: none;
+}

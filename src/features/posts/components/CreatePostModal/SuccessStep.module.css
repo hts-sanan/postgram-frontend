@@ -1,0 +1,30 @@
+.banner {
+  background: linear-gradient(180deg, var(--gradient-hero-start), var(--color-surface) 85%);
+  padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-sm);
+}
+
+.iconWrapper {
+  color: var(--color-primary);
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.description {
+  color: var(--color-text-secondary);
+  max-width: 360px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: 0 var(--spacing-xl) var(--spacing-xl);
+  justify-content: center;
+}
