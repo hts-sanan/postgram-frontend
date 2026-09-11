@@ -1,0 +1,22 @@
+.section {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-xs);
+}
+
+.heading {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+}
+
+.seeAll {
+  display: block;
+  text-align: center;
+  margin-top: var(--spacing-xs);
+  font-weight: var(--font-weight-semibold);
+  background: none;
+  border: none;
+  color: var(--color-text-link);
+  cursor: pointer;
+  width: 100%;
+}

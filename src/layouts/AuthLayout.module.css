@@ -1,0 +1,87 @@
+.wrapper {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .wrapper {
+    grid-template-columns: 1fr 1.15fr;
+  }
+}
+
+.formPane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+}
+
+.heroPane {
+  display: none;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-2xl);
+  background: linear-gradient(160deg, var(--gradient-hero-start), var(--gradient-hero-end));
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  .heroPane {
+    display: flex;
+  }
+}
+
+.heroBrand {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  position: absolute;
+  top: var(--spacing-xl);
+  right: var(--spacing-xl);
+}
+
+.heroLogo {
+  font-size: 1.5rem;
+}
+
+.heroBrandName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.heroHeadline {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  line-height: var(--line-height-tight);
+  max-width: 460px;
+}
+
+.heroSubtext {
+  color: var(--color-text-secondary);
+  max-width: 420px;
+  font-size: var(--font-size-lg);
+}
+
+.previewCard {
+  margin-top: var(--spacing-xl);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.previewSearch,
+.previewComposer {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 0.6rem 1rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
