@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { authService } from '@/features/auth/services/authService';
 import type { LoginCredentials, Session, SignupInput } from '@/features/auth/types';
+import type { User } from '@/types';
 
 interface AuthContextValue {
   session: Session | null;
@@ -11,6 +12,8 @@ interface AuthContextValue {
   signup: (input: SignupInput) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+  /** Merges partial user updates into the current session (e.g. after avatar/bio change elsewhere). */
+  updateSessionUser: (updates: Partial<User>) => void;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -70,9 +73,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const clearError = useCallback(() => setError(null), []);
 
+  const updateSessionUser = useCallback((updates: Partial<User>) => {
+    setSession((prev) => (prev ? { ...prev, user: { ...prev.user, ...updates } } : prev));
+  }, []);
+
   const value = useMemo(
-    () => ({ session, isInitializing, isAuthenticating, error, login, signup, logout, clearError }),
-    [session, isInitializing, isAuthenticating, error, login, signup, logout, clearError],
+    () => ({ session, isInitializing, isAuthenticating, error, login, signup, logout, clearError, updateSessionUser }),
+    [session, isInitializing, isAuthenticating, error, login, signup, logout, clearError, updateSessionUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 import { postService } from '../services';
+import { setPendingImageFile } from '../services/apiPostService';
+import { config } from '@/app/config';
 import { useAuth } from '@/features/auth';
 import { useCreatePostModal } from '@/hooks/useCreatePostModal';
 import type { Post } from '@/types';
@@ -12,10 +14,6 @@ export interface DraftImage {
 
 let draftImageCounter = 0;
 
-/**
- * Owns the Create Post form state and talks to postService — the modal's
- * step components stay presentational and just call what this returns.
- */
 export function useCreatePost() {
   const { session } = useAuth();
   const { notifyPostCreated } = useCreatePostModal();
@@ -49,6 +47,10 @@ export function useCreatePost() {
     setIsSubmitting(true);
     setError(null);
     try {
+      if (!config.useMocks && images.length > 0) {
+        // Real API stores a single image per post — only the first is sent.
+        setPendingImageFile(images[0].file);
+      }
       const post = await postService.createPost(session.user.id, {
         content: content.trim(),
         imageUrls: images.map((image) => image.previewUrl),
@@ -72,17 +74,5 @@ export function useCreatePost() {
     setCreatedPost(null);
   }, [images]);
 
-  return {
-    content,
-    setContent,
-    images,
-    addImages,
-    removeImage,
-    canSubmit,
-    isSubmitting,
-    error,
-    createdPost,
-    submit,
-    reset,
-  };
+  return { content, setContent, images, addImages, removeImage, canSubmit, isSubmitting, error, createdPost, submit, reset };
 }
