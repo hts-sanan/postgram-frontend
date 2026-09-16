@@ -8,6 +8,8 @@ export interface LoginCredentials {
 export interface SignupInput {
   username: string;
   password: string;
+  firstName: string;
+  lastName: string;
   birthDate: string;
 }
 
@@ -16,10 +18,6 @@ export interface Session {
   token: string;
 }
 
-/**
- * Auth is behind an interface so the mock implementation can be swapped for a
- * real backend-backed implementation later with no changes to the UI layer.
- */
 export interface AuthService {
   login(credentials: LoginCredentials): Promise<Session>;
   signup(input: SignupInput): Promise<Session>;

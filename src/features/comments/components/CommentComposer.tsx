@@ -12,6 +12,7 @@ export function CommentComposer({ onSubmit }: CommentComposerProps) {
   const { session } = useAuth();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!session) return null;
 
@@ -19,27 +20,33 @@ export function CommentComposer({ onSubmit }: CommentComposerProps) {
     event.preventDefault();
     if (!content.trim()) return;
     setIsSubmitting(true);
+    setError(null);
     try {
       await onSubmit(content.trim());
       setContent('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to post comment. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <Avatar src={session.user.avatarUrl} name={session.user.displayName} id={session.user.id} size="sm" />
-      <input
-        className={styles.input}
-        placeholder="Add a comment…"
-        value={content}
-        onChange={(event) => setContent(event.target.value)}
-        aria-label="Add a comment"
-      />
-      <Button type="submit" size="sm" isLoading={isSubmitting} disabled={!content.trim()}>
-        Sent ➤
-      </Button>
-    </form>
+    <>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <Avatar src={session.user.avatarUrl} name={session.user.displayName} id={session.user.id} size="sm" />
+        <input
+          className={styles.input}
+          placeholder="Add a comment…"
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
+          aria-label="Add a comment"
+        />
+        <Button type="submit" size="sm" isLoading={isSubmitting} disabled={!content.trim()}>
+          Sent ➤
+        </Button>
+      </form>
+      {error && <p style={{ color: 'red', fontSize: '13px', marginTop: '4px' }}>{error}</p>}
+    </>
   );
 }

@@ -10,6 +10,8 @@ export function SignupForm() {
   const { signup, isAuthenticating, error, clearError } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,7 +28,7 @@ export function SignupForm() {
     }
 
     try {
-      await signup({ username, password, birthDate });
+      await signup({ username, password, firstName, lastName, birthDate });
       navigate(ROUTES.home, { replace: true });
     } catch {
       // error state is already surfaced via useAuth()
@@ -47,6 +49,22 @@ export function SignupForm() {
         onChange={(event) => setUsername(event.target.value)}
         error={error ?? undefined}
         autoComplete="username"
+        required
+      />
+      <Input
+        label="First name"
+        placeholder="Enter your first name"
+        value={firstName}
+        onChange={(event) => setFirstName(event.target.value)}
+        autoComplete="given-name"
+        required
+      />
+      <Input
+        label="Last name"
+        placeholder="Enter your last name"
+        value={lastName}
+        onChange={(event) => setLastName(event.target.value)}
+        autoComplete="family-name"
         required
       />
       <Input

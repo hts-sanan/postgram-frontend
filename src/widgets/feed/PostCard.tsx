@@ -14,7 +14,6 @@ import styles from './PostCard.module.css';
 interface PostCardProps {
   post: Post;
   onToggleLike: (postId: string) => void;
-  // Accepts the hook's Promise<Post> return (or any Promise) — the card only awaits it.
   onUpdate: (postId: string, content: string) => Promise<unknown>;
   onDelete: (postId: string) => Promise<unknown>;
 }
@@ -31,6 +30,7 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [liveCommentCount, setLiveCommentCount] = useState<number | null>(null);
+  const [justCopied, setJustCopied] = useState(false);
 
   const handleSaveEdit = async () => {
     setIsSaving(true);
@@ -50,6 +50,18 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
       setIsDeleting(false);
       setIsDeleteOpen(false);
     }
+  };
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}${ROUTES.home}?post=${post.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      // Clipboard API can fail (e.g. insecure context) — fall back to a manual prompt.
+      window.prompt('Copy this link:', url);
+    }
+    setJustCopied(true);
+    setTimeout(() => setJustCopied(false), 2000);
   };
 
   return (
@@ -129,8 +141,13 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
         <button type="button" className={styles.engagementButton} onClick={() => setCommentsOpen((prev) => !prev)}>
           💬 {liveCommentCount ?? post.commentCount}
         </button>
-        <button type="button" className={`${styles.engagementButton} ${styles.shareButton}`} aria-label="Share post">
-          🔗
+        <button
+          type="button"
+          className={`${styles.engagementButton} ${styles.shareButton}`}
+          aria-label="Copy link to post"
+          onClick={handleShare}
+        >
+          {justCopied ? '✅ Copied!' : '🔗'}
         </button>
       </div>
 

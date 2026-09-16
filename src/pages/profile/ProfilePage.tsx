@@ -10,7 +10,7 @@ import type { User } from '@/types';
 import styles from './ProfilePage.module.css';
 
 export function ProfilePage() {
-  const { session } = useAuth();
+  const { session, updateSessionUser } = useAuth();
   const { open: openCreatePost, feedVersion } = useCreatePostModal();
   const [user, setUser] = useState<User | null>(session?.user ?? null);
   const { state, toggleLike, updatePost, deletePost } = usePosts({ authorId: session?.user.id, refreshKey: feedVersion });
@@ -22,6 +22,11 @@ export function ProfilePage() {
 
   if (!session || !user) return null;
 
+  const handleUserUpdate = (updated: User) => {
+    setUser(updated);
+    updateSessionUser(updated);
+  };
+
   return (
     <AppLayout>
       <ProfileHeader
@@ -29,8 +34,9 @@ export function ProfilePage() {
         isOwnProfile
         onUpdateBio={async (bio) => {
           const updated = await profileService.updateBio(session.user.id, bio);
-          setUser(updated);
+          handleUserUpdate(updated);
         }}
+        onUserUpdate={handleUserUpdate}
       />
 
       <div className={styles.header}>

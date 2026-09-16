@@ -18,16 +18,10 @@ interface RequestOptions {
 
 let authToken: string | null = null;
 
-/** Called by the auth layer whenever the session token changes. */
 export function setAuthToken(token: string | null): void {
   authToken = token;
 }
 
-/**
- * Centralized HTTP client. Every real (non-mock) service should go through
- * this instead of calling fetch() directly, so base URL, headers, auth and
- * error handling stay in one place.
- */
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const response = await fetch(`${config.apiBaseUrl}${path}`, {
     method: options.method ?? 'GET',
@@ -42,11 +36,23 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   if (!response.ok) {
     throw new ApiError(`Request to ${path} failed`, response.status);
   }
+  if (response.status === 204) return undefined as T;
+  return (await response.json()) as T;
+}
 
-  if (response.status === 204) {
-    return undefined as T;
+async function requestForm<T>(path: string, formData: FormData, method: 'POST' | 'PATCH' = 'POST'): Promise<T> {
+  const response = await fetch(`${config.apiBaseUrl}${path}`, {
+    method,
+    headers: {
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      // no Content-Type — browser sets the multipart boundary automatically
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new ApiError(`Request to ${path} failed`, response.status);
   }
-
   return (await response.json()) as T;
 }
 
@@ -59,4 +65,6 @@ export const apiClient = {
   patch: <T>(path: string, body?: unknown, headers?: Record<string, string>) =>
     request<T>(path, { method: 'PATCH', body, headers }),
   delete: <T>(path: string, headers?: Record<string, string>) => request<T>(path, { method: 'DELETE', headers }),
+  postForm: <T>(path: string, formData: FormData) => requestForm<T>(path, formData, 'POST'),
+  patchForm: <T>(path: string, formData: FormData) => requestForm<T>(path, formData, 'PATCH'),
 };
