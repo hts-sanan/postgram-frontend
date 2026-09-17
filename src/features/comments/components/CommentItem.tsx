@@ -14,6 +14,7 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, isOwner, onEdit, onDeleteRequest }: CommentItemProps) {
+  console.log('COMMENT ITEM:', comment.author);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(comment.content);
   const [isSaving, setIsSaving] = useState(false);
