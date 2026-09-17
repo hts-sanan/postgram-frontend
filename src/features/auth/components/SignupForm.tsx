@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '../hooks/useAuth';
 import styles from './LoginForm.module.css';
+import { Toggle } from '@/components/ui/Toggle';
 
 export function SignupForm() {
   const { signup, isAuthenticating, error, clearError } = useAuth();
@@ -16,6 +17,7 @@ export function SignupForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [rememberMe, setRememberMe] = useState(false);  
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -95,12 +97,14 @@ export function SignupForm() {
         required
       />
 
+      <Toggle label="Remember me" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
+
       <Button type="submit" fullWidth isLoading={isAuthenticating}>
         Create account
       </Button>
 
       <p className={styles.footer}>
-        Dont have an account? <Link to={ROUTES.signup}>Sign up now</Link>
+        Already have an account? <Link to={ROUTES.login}>Log in now</Link>
       </p>
     </form>
   );

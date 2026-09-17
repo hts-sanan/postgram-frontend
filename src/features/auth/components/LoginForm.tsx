@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '../hooks/useAuth';
 import styles from './LoginForm.module.css';
+import { Toggle } from '@/components/ui/Toggle';
 
 export function LoginForm() {
   const { login, isAuthenticating, error, clearError } = useAuth();
@@ -49,10 +50,7 @@ export function LoginForm() {
         required
       />
 
-      <label className={styles.rememberRow}>
-        <input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
-        Remember me
-      </label>
+      <Toggle label="Remember me" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
 
       {error && <p className={styles.formError}>{error}</p>}
 
