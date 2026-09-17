@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { profileService } from '../services';
+import { useToast } from '@/store/ToastContext';
 import type { User } from '@/types';
 import styles from './ProfileHeader.module.css';
 
@@ -15,6 +16,7 @@ interface ProfileHeaderProps {
 const birthDateFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
 export function ProfileHeader({ user, isOwnProfile, onUpdateBio, onUserUpdate }: ProfileHeaderProps) {
+  const { showToast } = useToast();
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [draft, setDraft] = useState(user.bio);
   const [isSaving, setIsSaving] = useState(false);
@@ -26,6 +28,9 @@ export function ProfileHeader({ user, isOwnProfile, onUpdateBio, onUserUpdate }:
     try {
       await onUpdateBio(draft);
       setIsEditingBio(false);
+      showToast('Profile updated.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not update profile.', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -40,6 +45,9 @@ export function ProfileHeader({ user, isOwnProfile, onUpdateBio, onUserUpdate }:
     try {
       const updated = await profileService.uploadAvatar(user.id, file);
       onUserUpdate?.(updated);
+      showToast('Profile picture updated.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not upload picture.', 'error');
     } finally {
       setIsUploadingAvatar(false);
       event.target.value = '';
@@ -51,6 +59,9 @@ export function ProfileHeader({ user, isOwnProfile, onUpdateBio, onUserUpdate }:
     try {
       const updated = await profileService.removeAvatar(user.id);
       onUserUpdate?.(updated);
+      showToast('Profile picture removed.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not remove picture.', 'error');
     } finally {
       setIsUploadingAvatar(false);
     }

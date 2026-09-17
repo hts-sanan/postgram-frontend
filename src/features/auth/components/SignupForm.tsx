@@ -4,11 +4,13 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '@/store/ToastContext';
 import styles from './LoginForm.module.css';
 
 export function SignupForm() {
   const { signup, isAuthenticating, error, clearError } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [username, setUsername] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -24,14 +26,16 @@ export function SignupForm() {
 
     if (password !== confirmPassword) {
       setConfirmError('Passwords do not match.');
+      showToast('Passwords do not match.', 'error');
       return;
     }
 
     try {
       await signup({ username, password, firstName, lastName, birthDate });
+      showToast('Welcome to Postgram!', 'success');
       navigate(ROUTES.home, { replace: true });
-    } catch {
-      // error state is already surfaced via useAuth()
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not create account.', 'error');
     }
   };
 
