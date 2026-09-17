@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/features/auth';
+import { useToast } from '@/store/ToastContext';
 import styles from './CommentComposer.module.css';
 
 interface CommentComposerProps {
@@ -10,6 +11,7 @@ interface CommentComposerProps {
 
 export function CommentComposer({ onSubmit }: CommentComposerProps) {
   const { session } = useAuth();
+  const { showToast } = useToast();
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +26,11 @@ export function CommentComposer({ onSubmit }: CommentComposerProps) {
     try {
       await onSubmit(content.trim());
       setContent('');
+      showToast('Comment added.', 'success');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to post comment. Please try again.');
+      const message = err instanceof Error ? err.message : 'Failed to post comment. Please try again.';
+      setError(message);
+      showToast(message, 'error');
     } finally {
       setIsSubmitting(false);
     }

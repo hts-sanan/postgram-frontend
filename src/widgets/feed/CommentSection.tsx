@@ -3,6 +3,7 @@ import { useComments } from '@/features/comments/hooks/useComments';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { useAuth } from '@/features/auth';
+import { useToast } from '@/store/ToastContext';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useEffect, useState } from 'react';
 import styles from './CommentSection.module.css';
@@ -18,6 +19,7 @@ interface CommentSectionProps {
 /** Inline comment thread shown under an expanded post, matching the Figma "Comments" screens. */
 export function CommentSection({ postId, onCountChange }: CommentSectionProps) {
   const { session } = useAuth();
+  const { showToast } = useToast();
   const { state, addComment, editComment, removeComment } = useComments(postId, true);
 
   useEffect(() => {
@@ -39,6 +41,9 @@ export function CommentSection({ postId, onCountChange }: CommentSectionProps) {
     try {
       await removeComment(pendingDeleteId);
       closeConfirm();
+      showToast('Comment deleted.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not delete comment.', 'error');
     } finally {
       setIsDeleting(false);
       setPendingDeleteId(null);
@@ -62,20 +67,16 @@ export function CommentSection({ postId, onCountChange }: CommentSectionProps) {
       )}
 
       {state.status === 'success' &&
-        (showAll ? state.data : state.data.slice(0, PREVIEW_COUNT)).map((comment) => {
-          console.log('COMMENT BEFORE ITEM:', comment);
-          return (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              isOwner={session?.user.id === comment.author.id}
-              onEdit={(content) => editComment(comment.id, content).then(() => undefined)}
-              onDeleteRequest={() => handleDeleteRequest(comment.id)}
-            />
-          );
-      
-          
-      })}
+        (showAll ? state.data : state.data.slice(0, PREVIEW_COUNT)).map((comment) => (
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            isOwner={session?.user.id === comment.author.id}
+            onEdit={(content) => editComment(comment.id, content).then(() => undefined)}
+            onDeleteRequest={() => handleDeleteRequest(comment.id)}
+          />
+        ))}
+
       {state.status === 'success' && !showAll && state.data.length > PREVIEW_COUNT && (
         <button type="button" className={styles.seeAll} onClick={() => setShowAll(true)}>
           See All Comments →
