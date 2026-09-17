@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { PostOptionsMenu } from '@/features/posts/components/PostOptionsMenu';
 import { useAuth } from '@/features/auth';
+import { useToast } from '@/store/ToastContext';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 import { ROUTES } from '@/constants/routes';
 import { CommentSection } from './CommentSection';
@@ -20,6 +21,7 @@ interface PostCardProps {
 
 export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardProps) {
   const { session } = useAuth();
+  const { showToast } = useToast();
   const isOwner = session?.user.id === post.author.id;
 
   const [isEditing, setIsEditing] = useState(false);
@@ -37,6 +39,9 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
     try {
       await onUpdate(post.id, draft);
       setIsEditing(false);
+      showToast('Post updated.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not update post.', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -46,9 +51,20 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
     setIsDeleting(true);
     try {
       await onDelete(post.id);
+      showToast('Post deleted.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not delete post.', 'error');
     } finally {
       setIsDeleting(false);
       setIsDeleteOpen(false);
+    }
+  };
+
+  const handleToggleLike = () => {
+    try {
+      onToggleLike(post.id);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not update like.', 'error');
     }
   };
 
@@ -57,10 +73,10 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
     try {
       await navigator.clipboard.writeText(url);
     } catch {
-      // Clipboard API can fail (e.g. insecure context) — fall back to a manual prompt.
       window.prompt('Copy this link:', url);
     }
     setJustCopied(true);
+    showToast('Link copied to clipboard!', 'success');
     setTimeout(() => setJustCopied(false), 2000);
   };
 
@@ -133,7 +149,7 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
         <button
           type="button"
           className={post.likedByCurrentUser ? `${styles.engagementButton} ${styles.liked}` : styles.engagementButton}
-          onClick={() => onToggleLike(post.id)}
+          onClick={handleToggleLike}
           aria-pressed={post.likedByCurrentUser}
         >
           👍 {post.likeCount}

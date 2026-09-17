@@ -4,12 +4,14 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '../hooks/useAuth';
+import { useToast } from '@/store/ToastContext';
 import styles from './LoginForm.module.css';
 import { Toggle } from '@/components/ui/Toggle';
 
 export function LoginForm() {
   const { login, isAuthenticating, error, clearError } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -19,9 +21,10 @@ export function LoginForm() {
     clearError();
     try {
       await login({ username, password });
+      showToast('Signed in successfully.', 'success');
       navigate(ROUTES.home, { replace: true });
-    } catch {
-      // error state is already surfaced via useAuth()
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Invalid username or password.', 'error');
     }
   };
 
