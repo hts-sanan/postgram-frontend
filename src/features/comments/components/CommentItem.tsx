@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { useToast } from '@/store/ToastContext';
 import { CommentOptionsMenu } from './CommentOptionsMenu';
 import type { Comment } from '@/types';
 import styles from './CommentItem.module.css';
@@ -14,7 +15,7 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, isOwner, onEdit, onDeleteRequest }: CommentItemProps) {
-  console.log('COMMENT ITEM:', comment.author);
+  const { showToast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(comment.content);
   const [isSaving, setIsSaving] = useState(false);
@@ -24,6 +25,9 @@ export function CommentItem({ comment, isOwner, onEdit, onDeleteRequest }: Comme
     try {
       await onEdit(draft);
       setIsEditing(false);
+      showToast('Comment updated.', 'success');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not update comment.', 'error');
     } finally {
       setIsSaving(false);
     }
