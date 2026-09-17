@@ -23,7 +23,7 @@ interface CommentsListResponse {
 }
 
 function toComment(raw: RawComment): Comment {
-  return {
+  const comment = {
     id: raw.id,
     postId: raw.postId,
     author: {
@@ -38,6 +38,10 @@ function toComment(raw: RawComment): Comment {
     createdAt: raw.createdAt,
     editedAt: raw.updatedAt !== raw.createdAt ? raw.updatedAt : null,
   };
+
+  console.log('API COMMENT MAPPED:', comment);
+
+  return comment;
 }
 
 // Flattens top-level comments + their one level of replies into a single list,

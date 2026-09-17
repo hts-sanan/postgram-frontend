@@ -62,16 +62,20 @@ export function CommentSection({ postId, onCountChange }: CommentSectionProps) {
       )}
 
       {state.status === 'success' &&
-        (showAll ? state.data : state.data.slice(0, PREVIEW_COUNT)).map((comment) => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            isOwner={session?.user.id === comment.author.id}
-            onEdit={(content) => editComment(comment.id, content).then(() => undefined)}
-            onDeleteRequest={() => handleDeleteRequest(comment.id)}
-          />
-        ))}
-
+        (showAll ? state.data : state.data.slice(0, PREVIEW_COUNT)).map((comment) => {
+          console.log('COMMENT BEFORE ITEM:', comment);
+          return (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              isOwner={session?.user.id === comment.author.id}
+              onEdit={(content) => editComment(comment.id, content).then(() => undefined)}
+              onDeleteRequest={() => handleDeleteRequest(comment.id)}
+            />
+          );
+      
+          
+      })}
       {state.status === 'success' && !showAll && state.data.length > PREVIEW_COUNT && (
         <button type="button" className={styles.seeAll} onClick={() => setShowAll(true)}>
           See All Comments →

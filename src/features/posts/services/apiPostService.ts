@@ -44,7 +44,7 @@ async function getAuthor(userId: string): Promise<User> {
     const user: User = {
       id: profile.userId,
       username: profile.username,
-      displayName: `${profile.firstName} ${profile.lastName}`.trim(),
+      displayName: profile.username,
       avatarUrl: resolveUrl(profile.profilePictureUrl),
       bio: '',
       birthDate: null,
@@ -55,7 +55,7 @@ async function getAuthor(userId: string): Promise<User> {
     const fallback: User = {
       id: userId,
       username: 'unknown',
-      displayName: 'Unknown user',
+      displayName: 'unknown',
       avatarUrl: null,
       bio: '',
       birthDate: null,

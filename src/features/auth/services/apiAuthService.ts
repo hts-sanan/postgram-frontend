@@ -70,12 +70,23 @@ export const apiAuthService: AuthService = {
   },
 
   async signup({ username, password, firstName, lastName, birthDate }: SignupInput) {
-    const tokens = await apiClient.post<AuthTokens>('/auth/signup', { username, password });
-    setAuthToken(tokens.accessToken);
-    const profile = await apiClient.post<ProfileResponse>('/profiles/me', {
-      firstName, lastName, dateOfBirth: birthDate,
+    const tokens = await apiClient.post<AuthTokens>('/auth/signup', {
+      username,
+      password,
+      firstName,
+      lastName,
+      dateOfBirth: birthDate,
     });
-    const session: Session = { user: toAuthenticatedUser(profile), token: tokens.accessToken };
+
+    setAuthToken(tokens.accessToken);
+
+    const profile = await apiClient.get<ProfileResponse>('/profiles/me');
+
+    const session: Session = {
+      user: toAuthenticatedUser(profile),
+      token: tokens.accessToken,
+    };
+
     persistSession(session, tokens.refreshToken);
     return session;
   },
