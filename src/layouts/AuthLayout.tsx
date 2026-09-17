@@ -6,27 +6,37 @@ interface AuthLayoutProps {
 }
 
 /**
- * Two-column layout used by Login/Signup: the form on the left, and the
- * lavender hero panel with the Postgram pitch on the right (Figma source of truth).
+ * Two-column layout used by Login/Signup.
+ * The left side contains the form, while the right side
+ * contains the rounded gradient hero panel.
  */
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.formPane}>{children}</div>
+
       <div className={styles.heroPane}>
         <div className={styles.heroBrand}>
-          <span className={styles.heroLogo} aria-hidden="true">
-            🧑‍🤝‍🧑
-          </span>
-          <span className={styles.heroBrandName}>Postgram</span>
+          <img
+          className={styles.heroLogo}
+          src="/logo.png"
+          alt="Postgram"
+          />
         </div>
-        <h2 className={styles.heroHeadline}>Share what matters.</h2>
+
+        <h2 className={styles.heroHeadline}>Share what<br/>matters.</h2>
+
         <p className={styles.heroSubtext}>
-          Connect with people, share your moments, and discover something new every day.
+          Connect with people, share your moments, and discover something new
+          every day.
         </p>
+
         <div className={styles.previewCard} aria-hidden="true">
-          <div className={styles.previewSearch}>Search…</div>
-          <div className={styles.previewComposer}>Start a post</div>
+          <img
+            className={styles.previewPostImage}
+            src="/dashboard.png"
+            alt=""
+          />
         </div>
       </div>
     </div>

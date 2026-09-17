@@ -22,14 +22,6 @@
   color: var(--color-text-secondary);
 }
 
-.rememberRow {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
 .formError {
   color: var(--color-error);
   font-size: var(--font-size-sm);
