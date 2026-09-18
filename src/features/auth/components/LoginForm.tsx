@@ -9,7 +9,7 @@ import styles from './LoginForm.module.css';
 import { Toggle } from '@/components/ui/Toggle';
 
 export function LoginForm() {
-  const { login, isAuthenticating, error, clearError } = useAuth();
+  const { login, isAuthenticating, fieldErrors, clearError } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [username, setUsername] = useState('');
@@ -19,12 +19,16 @@ export function LoginForm() {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     clearError();
+
     try {
       await login({ username, password });
       showToast('Signed in successfully.', 'success');
       navigate(ROUTES.home, { replace: true });
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Invalid username or password.', 'error');
+      showToast(
+        err instanceof Error ? err.message : 'Invalid username or password.',
+        'error',
+      );
     }
   };
 
@@ -32,7 +36,9 @@ export function LoginForm() {
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.heading}>
         <h1 className={styles.title}>Welcome back 👋</h1>
-        <p className={styles.subtitle}>Sign in to continue sharing and connecting.</p>
+        <p className={styles.subtitle}>
+          Sign in to continue sharing and connecting.
+        </p>
       </div>
 
       <Input
@@ -42,7 +48,9 @@ export function LoginForm() {
         onChange={(event) => setUsername(event.target.value)}
         autoComplete="username"
         required
+        error={fieldErrors.username}
       />
+
       <Input
         label="Password"
         placeholder="Enter password"
@@ -51,11 +59,18 @@ export function LoginForm() {
         onChange={(event) => setPassword(event.target.value)}
         autoComplete="current-password"
         required
+        error={fieldErrors.password}
       />
 
-      <Toggle label="Remember me" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
+      <Toggle
+        label="Remember me"
+        checked={rememberMe}
+        onChange={(event) => setRememberMe(event.target.checked)}
+      />
 
-      {error && <p className={styles.formError}>{error}</p>}
+      {fieldErrors.form && (
+        <p className={styles.formError}>{fieldErrors.form}</p>
+      )}
 
       <Button type="submit" fullWidth isLoading={isAuthenticating}>
         Sign in

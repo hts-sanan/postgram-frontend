@@ -9,7 +9,7 @@ import styles from './LoginForm.module.css';
 import { Toggle } from '@/components/ui/Toggle';
 
 export function SignupForm() {
-  const { signup, isAuthenticating, error, clearError } = useAuth();
+  const { signup, isAuthenticating, fieldErrors, clearError } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ export function SignupForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmError, setConfirmError] = useState<string | null>(null);
-  const [rememberMe, setRememberMe] = useState(false);  
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -37,7 +37,10 @@ export function SignupForm() {
       showToast('Welcome to Postgram!', 'success');
       navigate(ROUTES.home, { replace: true });
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'Could not create account.', 'error');
+      showToast(
+        err instanceof Error ? err.message : 'Could not create account.',
+        'error',
+      );
     }
   };
 
@@ -53,55 +56,75 @@ export function SignupForm() {
         placeholder="Enter a username"
         value={username}
         onChange={(event) => setUsername(event.target.value)}
-        error={error ?? undefined}
+        error={fieldErrors.username}
         autoComplete="username"
         required
       />
+
       <Input
         label="First name"
         placeholder="Enter your first name"
         value={firstName}
         onChange={(event) => setFirstName(event.target.value)}
+        error={fieldErrors.firstName}
         autoComplete="given-name"
         required
       />
+
       <Input
         label="Last name"
         placeholder="Enter your last name"
         value={lastName}
         onChange={(event) => setLastName(event.target.value)}
+        error={fieldErrors.lastName}
         autoComplete="family-name"
         required
       />
+
       <Input
         label="Date of birth"
         placeholder="DD / MM / YYYY"
         type="date"
         value={birthDate}
         onChange={(event) => setBirthDate(event.target.value)}
+        error={fieldErrors.birthDate}
         required
       />
+
       <Input
         label="Password"
         placeholder="Create a password"
         isPassword
         value={password}
         onChange={(event) => setPassword(event.target.value)}
+        error={fieldErrors.password}
         autoComplete="new-password"
         required
       />
+
       <Input
         label="Confirm password"
         placeholder="Re-enter your password"
         isPassword
         value={confirmPassword}
-        onChange={(event) => setConfirmPassword(event.target.value)}
+        onChange={(event) => {
+          setConfirmPassword(event.target.value);
+          setConfirmError(null);
+        }}
         error={confirmError ?? undefined}
         autoComplete="new-password"
         required
       />
 
-      <Toggle label="Remember me" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
+      <Toggle
+        label="Remember me"
+        checked={rememberMe}
+        onChange={(event) => setRememberMe(event.target.checked)}
+      />
+
+      {fieldErrors.form && (
+        <p className={styles.formError}>{fieldErrors.form}</p>
+      )}
 
       <Button type="submit" fullWidth isLoading={isAuthenticating}>
         Create account
