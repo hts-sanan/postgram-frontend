@@ -21,7 +21,7 @@ export function Sidebar() {
     <aside className={styles.sidebar}>
       <div>
            <div className={styles.brand}>
-          <img src="/logo_dashboard.png" alt="Postgram" />
+          <img src="/logo-dark.png" alt="Postgram" />
           </div>
 
         <Button  onClick={() => openCreatePost('compose')} className={styles.createButton}>
