@@ -36,6 +36,7 @@ button {
 
 a {
   color: var(--color-text-link);
+  text-decoration: none;
 }
 
 img {

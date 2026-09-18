@@ -20,13 +20,12 @@ export function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <div>
-        <div className={styles.brand}>
-          <span aria-hidden="true">🧑‍🤝‍🧑</span>
-          Postgram
-        </div>
+           <div className={styles.brand}>
+          <img src="/logo-dark.png" alt="Postgram" />
+          </div>
 
-        <Button fullWidth onClick={() => openCreatePost('compose')} className={styles.createButton}>
-          + Create Post
+        <Button  onClick={() => openCreatePost('compose')} className={styles.createButton}>
+            <span className={styles.createIcon}>+</span> Create Post
         </Button>
 
         <p className={styles.sectionLabel}>Primary Section</p>
@@ -34,19 +33,29 @@ export function Sidebar() {
           <ul className={styles.navList}>
             <li>
               <NavLink
-                to={ROUTES.home}
-                end
-                className={({ isActive }) => classNames(styles.navLink, isActive && styles.navLinkActive)}
-              >
-                Home
-              </NavLink>
+              to={ROUTES.home}
+        
+              className={({ isActive }) => classNames(styles.navLink, isActive && styles.navLinkActive)}
+>
+                {({ isActive }) => (
+    <>
+                <img src={isActive ? '/icon-home.png' : '/icon-home-inactive.png'} alt="" className={styles.navIcon} />
+                  Home
+                </>
+              )}
+</NavLink>
             </li>
             <li>
               <NavLink
                 to={ROUTES.profile}
                 className={({ isActive }) => classNames(styles.navLink, isActive && styles.navLinkActive)}
               >
-                Profile
+                {({ isActive }) => (
+                  <>
+                    <img src={isActive ? '/icon-profile-active.png' : '/icon-profile.png'} alt="" className={styles.navIcon} />
+                    Profile
+                  </>
+                )}
               </NavLink>
             </li>
           </ul>
@@ -54,6 +63,7 @@ export function Sidebar() {
       </div>
 
       <button type="button" className={styles.logoutButton} onClick={handleLogout}>
+        <img src="/icon-logout.png" alt="" className={styles.navIcon} />
         Log Out
       </button>
     </aside>

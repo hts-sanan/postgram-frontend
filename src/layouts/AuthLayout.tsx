@@ -19,7 +19,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
         <div className={styles.heroBrand}>
           <img
           className={styles.heroLogo}
-          src="/logo.png"
+          src="/logo-light.png"
           alt="Postgram"
           />
         </div>
