@@ -4,6 +4,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public readonly status: number,
+    public readonly messages: string[] = [],
   ) {
     super(message);
     this.name = 'ApiError';
@@ -22,28 +23,44 @@ export function setAuthToken(token: string | null): void {
   authToken = token;
 }
 
-function getErrorMessage(errorBody: string, status: number): string {
+function getErrorDetails(
+  errorBody: string,
+  status: number,
+): { message: string; messages: string[] } {
   try {
     const error = JSON.parse(errorBody);
 
     if (Array.isArray(error.message)) {
-      return error.message.join(', ');
+      return {
+        message: error.message.join(', '),
+        messages: error.message,
+      };
     }
 
     if (typeof error.message === 'string') {
-      return error.message;
+      return {
+        message: error.message,
+        messages: [error.message],
+      };
     }
 
     if (typeof error.error === 'string') {
-      return error.error;
+      return {
+        message: error.error,
+        messages: [error.error],
+      };
     }
   } catch {}
 
-  if (status >= 500) {
-    return 'Something went wrong. Please try again later.';
-  }
+  const message =
+    status >= 500
+      ? 'Something went wrong. Please try again later.'
+      : 'Request failed. Please try again.';
 
-  return 'Request failed. Please try again.';
+  return {
+    message,
+    messages: [message],
+  };
 }
 
 async function request<T>(
@@ -63,10 +80,12 @@ async function request<T>(
 
   if (!response.ok) {
     const errorBody = await response.text();
+    const errorDetails = getErrorDetails(errorBody, response.status);
 
     throw new ApiError(
-      getErrorMessage(errorBody, response.status),
+      errorDetails.message,
       response.status,
+      errorDetails.messages,
     );
   }
 
@@ -93,10 +112,12 @@ async function requestForm<T>(
 
   if (!response.ok) {
     const errorBody = await response.text();
+    const errorDetails = getErrorDetails(errorBody, response.status);
 
     throw new ApiError(
-      getErrorMessage(errorBody, response.status),
+      errorDetails.message,
       response.status,
+      errorDetails.messages,
     );
   }
 
