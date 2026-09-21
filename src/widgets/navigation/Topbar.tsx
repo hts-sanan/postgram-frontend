@@ -6,12 +6,12 @@ export function Topbar() {
   return (
     <header className={styles.topbar}>
       <div className={styles.searchWrapper}>
-        <span className={styles.searchIcon} aria-hidden="true">
-          🔍
-        </span>
+          <img src="/icon-search.svg" alt="" className={styles.searchIcon} />
         <input type="search" placeholder="Search…" className={styles.searchInput} aria-label="Search Postgram" />
       </div>
-      <IconButton label="Notifications">🔔</IconButton>
+        <IconButton label="Notifications">
+    <img src="/icon-notification.svg" alt="" className={styles.notificationIcon} />
+  </IconButton>
     </header>
   );
 }
