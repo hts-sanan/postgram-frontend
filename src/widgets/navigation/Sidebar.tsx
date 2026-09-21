@@ -39,7 +39,7 @@ export function Sidebar() {
 >
                 {({ isActive }) => (
     <>
-                <img src={isActive ? '/icon-home.png' : '/icon-home-inactive.png'} alt="" className={styles.navIcon} />
+                <img src={isActive ? '/icon-home-active.svg' : '/icon-home-inactive.svg'} alt="" className={styles.navIcon} />
                   Home
                 </>
               )}
@@ -52,7 +52,7 @@ export function Sidebar() {
               >
                 {({ isActive }) => (
                   <>
-                    <img src={isActive ? '/icon-profile-active.png' : '/icon-profile.png'} alt="" className={styles.navIcon} />
+                    <img src={isActive ? '/icon-profile-active.svg' : '/icon-profile-inactive.svg'} alt="" className={styles.navIcon} />
                     Profile
                   </>
                 )}
@@ -63,7 +63,7 @@ export function Sidebar() {
       </div>
 
       <button type="button" className={styles.logoutButton} onClick={handleLogout}>
-        <img src="/icon-logout.png" alt="" className={styles.navIcon} />
+        <img src="/icon-logout.svg" alt="" className={styles.navIcon} />
         Log Out
       </button>
     </aside>

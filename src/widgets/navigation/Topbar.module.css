@@ -22,7 +22,9 @@
 .searchIcon {
   position: absolute;
   left: 1rem;
-  font-size: var(--font-size-sm);
+  width: 16px; 
+  height: 16px; 
+  object-fit: contain;
 }
 
 .searchInput {
@@ -37,4 +39,10 @@
 .searchInput:focus {
   outline: none;
   border-color: var(--color-primary);
+}
+
+.notificationIcon {
+  width: 20px;
+  height: 20px; 
+  object-fit: contain;
 }
