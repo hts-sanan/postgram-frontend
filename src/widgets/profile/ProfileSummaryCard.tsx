@@ -4,18 +4,26 @@ import { ROUTES } from '@/constants/routes';
 import type { User } from '@/types';
 import styles from './ProfileSummaryCard.module.css';
 
+const BIO_CHAR_LIMIT = 100;
+
+function truncateBio(bio: string, limit = BIO_CHAR_LIMIT) {
+  if (bio.length <= limit) return bio;
+  return `${bio.slice(0, limit).trimEnd()}…`;
+}
+
 interface ProfileSummaryCardProps {
   user: User;
 }
 
-/** Right-rail card on the feed page: avatar, name, bio, and a link to the full profile. */
 export function ProfileSummaryCard({ user }: ProfileSummaryCardProps) {
   return (
     <div className={styles.card}>
       <Avatar src={user.avatarUrl} name={user.displayName} id={user.id} size="xl" className={styles.avatar} />
       <h3 className={styles.name}>{user.displayName}</h3>
       <p className={styles.username}>{user.username}</p>
-      {user.bio && <p className={styles.bio}>{user.bio}</p>}
+      <div className={styles.bioBox}>
+        {user.bio && <p className={styles.bio}>{truncateBio(user.bio)}</p>}
+      </div>
       <Link to={ROUTES.profile} className={styles.link}>
         View Profile →
       </Link>

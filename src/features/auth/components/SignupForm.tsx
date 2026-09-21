@@ -28,7 +28,6 @@ export function SignupForm() {
 
     if (password !== confirmPassword) {
       setConfirmError('Passwords do not match.');
-      showToast('Passwords do not match.', 'error');
       return;
     }
 
@@ -36,11 +35,8 @@ export function SignupForm() {
       await signup({ username, password, firstName, lastName, birthDate });
       showToast('Welcome to Postgram!', 'success');
       navigate(ROUTES.home, { replace: true });
-    } catch (err) {
-      showToast(
-        err instanceof Error ? err.message : 'Could not create account.',
-        'error',
-      );
+    } catch {
+      // Inline field errors (fieldErrors.form / per-field) already surface the failure below.
     }
   };
 
@@ -88,6 +84,7 @@ export function SignupForm() {
         value={birthDate}
         onChange={(event) => setBirthDate(event.target.value)}
         error={fieldErrors.birthDate}
+        max={new Date().toISOString().split('T')[0]}
         required
       />
 

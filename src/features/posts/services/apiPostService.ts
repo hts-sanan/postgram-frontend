@@ -32,40 +32,63 @@ function resolveUrl(path: string | null): string | null {
   return `${origin}${path}`;
 }
 
-// Posts only return userId — fetch + cache each author's profile as needed.
-const authorCache = new Map<string, User>();
-
-async function getAuthor(userId: string): Promise<User> {
-  const cached = authorCache.get(userId);
-  if (cached) return cached;
-
+// Fetches fresh every call — a batch cache scoped to a single listPosts()
+// invocation is used below so we don't refetch the same author twice within
+// one request, but nothing persists across calls, avoiding stale data.
+async function fetchAuthor(userId: string): Promise<User> {
   try {
     const profile = await apiClient.get<ProfileResponse>(`/profiles/${userId}`);
-    const user: User = {
+    const hasName = profile.firstName?.trim() || profile.lastName?.trim();
+    return {
       id: profile.userId,
       username: profile.username,
-      displayName: profile.username,
+      displayName: hasName ? `${profile.firstName} ${profile.lastName}`.trim() : profile.username,
       avatarUrl: resolveUrl(profile.profilePictureUrl),
       bio: '',
       birthDate: null,
     };
-    authorCache.set(userId, user);
-    return user;
   } catch {
-    const fallback: User = {
+    return {
       id: userId,
       username: 'unknown',
-      displayName: 'unknown',
+      displayName: 'Unknown user',
       avatarUrl: null,
       bio: '',
       birthDate: null,
     };
-    return fallback;
   }
 }
 
-async function toPost(res: PostResponse): Promise<Post> {
-  const author = await getAuthor(res.userId);
+async function toPostsWithAuthors(posts: PostResponse[]): Promise<Post[]> {
+  const batchCache = new Map<string, User>();
+
+  const getAuthor = async (userId: string) => {
+    const cached = batchCache.get(userId);
+    if (cached) return cached;
+    const author = await fetchAuthor(userId);
+    batchCache.set(userId, author);
+    return author;
+  };
+
+  return Promise.all(
+    posts.map(async (res) => {
+      const author = await getAuthor(res.userId);
+      return {
+        id: res.id,
+        author,
+        content: res.content ?? '',
+        images: res.imageUrl ? [{ id: `${res.id}_img`, url: resolveUrl(res.imageUrl)!, alt: '' }] : [],
+        createdAt: res.createdAt,
+        likeCount: res.likeCount,
+        commentCount: res.commentCount,
+        likedByCurrentUser: res.hasLiked,
+      };
+    }),
+  );
+}
+
+async function toSinglePost(res: PostResponse): Promise<Post> {
+  const author = await fetchAuthor(res.userId);
   return {
     id: res.id,
     author,
@@ -86,14 +109,13 @@ export function setPendingImageFile(file: File | null) {
 export const apiPostService: PostService = {
   async listPosts() {
     const res = await apiClient.get<{ data: PostResponse[] }>('/posts');
-    return Promise.all(res.data.map(toPost));
+    return toPostsWithAuthors(res.data);
   },
 
   async listPostsByUser(userId) {
-    // Backend has no authorId filter yet — fetch all and filter client-side.
     const res = await apiClient.get<{ data: PostResponse[] }>('/posts');
     const filtered = res.data.filter((post) => post.userId === userId);
-    return Promise.all(filtered.map(toPost));
+    return toPostsWithAuthors(filtered);
   },
 
   async createPost(_authorId, input: CreatePostInput) {
@@ -103,12 +125,12 @@ export const apiPostService: PostService = {
     pendingImageFile = null;
 
     const res = await apiClient.postForm<PostResponse>('/posts', formData);
-    return toPost(res);
+    return toSinglePost(res);
   },
 
   async updatePost(postId, input: UpdatePostInput) {
     const res = await apiClient.patch<PostResponse>(`/posts/${postId}`, { content: input.content });
-    return toPost(res);
+    return toSinglePost(res);
   },
 
   async deletePost(postId) {
@@ -123,6 +145,6 @@ export const apiPostService: PostService = {
       await apiClient.post(`/posts/${postId}/likes`);
     }
     const updated = await apiClient.get<PostResponse>(`/posts/${postId}`);
-    return toPost(updated);
+    return toSinglePost(updated);
   },
 };
