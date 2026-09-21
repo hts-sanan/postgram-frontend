@@ -24,11 +24,8 @@ export function LoginForm() {
       await login({ username, password });
       showToast('Signed in successfully.', 'success');
       navigate(ROUTES.home, { replace: true });
-    } catch (err) {
-      showToast(
-        err instanceof Error ? err.message : 'Invalid username or password.',
-        'error',
-      );
+    } catch {
+      // Inline field errors (fieldErrors.form / per-field) already surface the failure below.
     }
   };
 

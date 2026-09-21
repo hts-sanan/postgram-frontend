@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/features/auth';
 import { useCreatePostModal } from '@/hooks/useCreatePostModal';
+import { useToast } from '@/store/ToastContext';
 import { classNames } from '@/utils/classNames';
 import styles from './Sidebar.module.css';
 
@@ -10,11 +11,17 @@ import styles from './Sidebar.module.css';
 export function Sidebar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const { open: openCreatePost } = useCreatePostModal();
 
   const handleLogout = async () => {
-    await logout();
-    navigate(ROUTES.login, { replace: true });
+    try {
+      await logout();
+      showToast('Signed out.', 'success');
+      navigate(ROUTES.login, { replace: true });
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Could not sign out. Please try again.', 'error');
+    }
   };
 
   return (

@@ -30,4 +30,4 @@ pnpm-debug.log*
 coverage/
 
 # Temporary files
-*.log
+*.log.env
