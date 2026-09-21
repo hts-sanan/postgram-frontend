@@ -45,6 +45,7 @@ async function getAuthor(userId: string): Promise<User> {
       id: profile.userId,
       username: profile.username,
       displayName: profile.username,
+      name: `${profile.firstName} ${profile.lastName}`,
       avatarUrl: resolveUrl(profile.profilePictureUrl),
       bio: '',
       birthDate: null,
