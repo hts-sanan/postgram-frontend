@@ -121,11 +121,11 @@ export function ProfileHeader({ user, isOwnProfile, onUpdateBio, onUserUpdate }:
               className={styles.bioInput}
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              maxLength={100}
+              maxLength={30}
               aria-label="Edit bio"
             />
             <span className={styles.bioCharacterCount}>
-              {draft.length}/100
+              {draft.length}/30
             </span>
             <Button size="sm" onClick={handleSave} isLoading={isSaving}>
               Save
