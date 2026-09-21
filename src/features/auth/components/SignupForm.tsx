@@ -20,6 +20,7 @@ export function SignupForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [rememberMe, setRememberMe] = useState(false);
+  const today = new Date().toISOString().split('T')[0];
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -86,7 +87,16 @@ export function SignupForm() {
         placeholder="DD / MM / YYYY"
         type="date"
         value={birthDate}
-        onChange={(event) => setBirthDate(event.target.value)}
+        onChange={(event) => {
+          const value = event.target.value;
+
+          if (value > today) {
+            return;
+          }
+          setBirthDate(value);
+        }}
+        max={today}
+
         error={fieldErrors.birthDate}
         required
       />

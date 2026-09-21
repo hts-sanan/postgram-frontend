@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
@@ -84,11 +83,11 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
     <article className={styles.card}>
       <header className={styles.header}>
         <div className={styles.authorRow}>
-          <Avatar src={post.author.avatarUrl} name={post.author.displayName} id={post.author.id} />
+          <Avatar src={post.author.avatarUrl} name={post.author.name ?? post.author.displayName} id={post.author.id} />
           <div>
-            <Link to={ROUTES.profile} className={styles.authorName}>
-              {post.author.displayName}
-            </Link>
+            <span className={styles.authorName}>{post.author.name}</span>
+  
+
             <span className={styles.username}>{post.author.username}</span>
           </div>
         </div>
