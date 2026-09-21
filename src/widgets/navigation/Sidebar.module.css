@@ -3,7 +3,7 @@
   flex-shrink: 0;
   background-color: var(--color-surface);
   border-right: 1px solid var(--color-border);
-  padding: var(--spacing-lg);
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -15,21 +15,24 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-xs);  
+  margin-block: 30px;
+  width: 150px;
+  margin-inline: auto;
+
 }
 
 .createButton {
   margin-bottom: var(--spacing-lg);
+  width: 90%;
+  margin-left: 10px;
 }
 
 .sectionLabel {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  text-transform: none;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 16px;
+    color: #7F7F7F;
+    font-size: 16px;
+    margin-left: 15px;
 }
 
 .navList {
@@ -39,12 +42,15 @@
 }
 
 .navLink {
-  display: block;
-  padding: 0.6rem 0.75rem;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  font-weight: var(--font-weight-medium);
+    display: flex;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-sm);
+    color: #64748B;
+    font-weight: var(--font-weight-medium);
+    font-size: 20px;
+    gap: 12px;
+    margin-left: 10px;
+    align-items: center;
 }
 
 .navLink:hover {
@@ -52,7 +58,7 @@
 }
 
 .navLinkActive {
-  color: var(--color-primary);
+  color: #0F172A;
   background-color: var(--color-primary-light);
 }
 
@@ -65,8 +71,10 @@
   color: var(--color-error);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  padding: 0.6rem 0.75rem;
-  text-align: left;
+  padding-block: 6px;
+  text-align: center;
+  margin-left: 28px;
+  margin-bottom: 27px;
 }
 
 .logoutButton:hover {
@@ -78,4 +86,25 @@
   .sidebar {
     display: none;
   }
+}
+
+.createIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  margin-right: 5px;
+}
+
+.navIcon {
+  width: 25px;
+  height: 25px;
+  object-fit:contain;
+  flex-shrink: 0;
 }
