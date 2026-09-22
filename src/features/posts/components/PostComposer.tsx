@@ -21,12 +21,14 @@ export function PostComposer() {
       </div>
       <div className={styles.actions}>
         <Button variant="secondary" size="sm" onClick={() => openCreatePost('compose')}>
-          📝 Write Post
-        </Button>
-        <Button variant="secondary" size="sm" onClick={() => openCreatePost('photo-intake')}>
-          🖼 Photo
-        </Button>
-        <Button size="sm" onClick={() => openCreatePost('compose')}>
+          <span className={styles.actionButton}>
+            <img src="/icon-write-post.svg" alt="" className={styles.actionIcon} /> Write Post
+          </span>
+</Button>
+<Button variant="secondary" size="sm" onClick={() => openCreatePost('photo-intake')}>
+  <img src="/icon-photo.svg" alt="" className={styles.actionIcon} /> Photo
+</Button>
+        <Button size="md" onClick={() => openCreatePost('compose')}>
           Post
         </Button>
       </div>

@@ -48,8 +48,8 @@ export function CommentComposer({ onSubmit }: CommentComposerProps) {
           aria-label="Add a comment"
         />
         <Button type="submit" size="sm" isLoading={isSubmitting} disabled={!content.trim()}>
-          Sent ➤
-        </Button>
+        Sent <img src="/icon-sent.svg" alt="" className={styles.sendIcon} />
+      </Button>
       </form>
       {error && <p style={{ color: 'red', fontSize: '13px', marginTop: '4px' }}>{error}</p>}
     </>

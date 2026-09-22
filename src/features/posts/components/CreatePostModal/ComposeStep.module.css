@@ -63,7 +63,9 @@
 }
 
 .attachIcon {
-  color: var(--color-primary);
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 .errorText {

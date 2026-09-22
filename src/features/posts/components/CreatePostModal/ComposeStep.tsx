@@ -51,11 +51,9 @@ export function ComposeStep({
 
       <div className={styles.attachRow}>
         <button type="button" className={styles.attachButton} onClick={() => fileInputRef.current?.click()}>
-          <span className={styles.attachIcon} aria-hidden="true">
-            🖼️
-          </span>
-          {images.length > 0 ? 'Add Photos' : 'Attach Photos'}
-        </button>
+  <img src="/icon-attach-photo.svg" alt="" className={styles.attachIcon} />
+  {images.length > 0 ? 'Add Photos' : 'Attach Photos'}
+</button>
         <input
           ref={fileInputRef}
           type="file"

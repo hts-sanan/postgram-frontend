@@ -7,7 +7,7 @@ import styles from './FeedList.module.css';
 
 interface FeedListProps {
   state: AsyncState<Post[]>;
-  onToggleLike: (postId: string) => void;
+  onToggleLike: (postId: string) => Promise<unknown>;
   onUpdate: (postId: string, content: string) => Promise<unknown>;
   onDelete: (postId: string) => Promise<unknown>;
   onCreatePost?: () => void;

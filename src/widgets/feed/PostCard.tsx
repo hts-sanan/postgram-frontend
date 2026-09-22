@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
@@ -13,7 +13,7 @@ import styles from './PostCard.module.css';
 
 interface PostCardProps {
   post: Post;
-  onToggleLike: (postId: string) => void;
+  onToggleLike: (postId: string) => Promise<unknown>;
   onUpdate: (postId: string, content: string) => Promise<unknown>;
   onDelete: (postId: string) => Promise<unknown>;
 }
@@ -32,6 +32,14 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [liveCommentCount, setLiveCommentCount] = useState<number | null>(null);
   const [justCopied, setJustCopied] = useState(false);
+  const [isLiked, setIsLiked] = useState(post.likedByCurrentUser);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const [isLiking, setIsLiking] = useState(false);
+
+  useEffect(() => {
+    setIsLiked(post.likedByCurrentUser);
+    setLikeCount(post.likeCount);
+  }, [post.likedByCurrentUser, post.likeCount]);
 
   const handleSaveEdit = async () => {
     setIsSaving(true);
@@ -59,11 +67,25 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
     }
   };
 
-  const handleToggleLike = () => {
+  const handleToggleLike = async () => {
+    if (isLiking) return;
+
+    const previousIsLiked = isLiked;
+    const previousLikeCount = likeCount;
+    const nextIsLiked = !previousIsLiked;
+
+    setIsLiked(nextIsLiked);
+    setLikeCount(previousLikeCount + (nextIsLiked ? 1 : -1));
+    setIsLiking(true);
+
     try {
-      onToggleLike(post.id);
+      await onToggleLike(post.id);
     } catch (err) {
+      setIsLiked(previousIsLiked);
+      setLikeCount(previousLikeCount);
       showToast(err instanceof Error ? err.message : 'Could not update like.', 'error');
+    } finally {
+      setIsLiking(false);
     }
   };
 
@@ -145,25 +167,32 @@ export function PostCard({ post, onToggleLike, onUpdate, onDelete }: PostCardPro
       )}
 
       <div className={styles.engagementRow}>
-        <button
-          type="button"
-          className={post.likedByCurrentUser ? `${styles.engagementButton} ${styles.liked}` : styles.engagementButton}
-          onClick={handleToggleLike}
-          aria-pressed={post.likedByCurrentUser}
-        >
-          👍 {post.likeCount}
-        </button>
-        <button type="button" className={styles.engagementButton} onClick={() => setCommentsOpen((prev) => !prev)}>
-          💬 {liveCommentCount ?? post.commentCount}
-        </button>
-        <button
-          type="button"
-          className={`${styles.engagementButton} ${styles.shareButton}`}
-          aria-label="Copy link to post"
-          onClick={handleShare}
-        >
-          {justCopied ? '✅ Copied!' : '🔗'}
-        </button>
+       <button
+        type="button"
+        className={isLiked ? `${styles.engagementButton} ${styles.liked}` : styles.engagementButton}
+        onClick={handleToggleLike}
+        aria-pressed={isLiked}
+        disabled={isLiking}
+      >
+        <img
+          src={isLiked ? '/icon-like-active.svg' : '/icon-like.svg'}
+          alt=""
+          className={styles.engagementIcon}
+        />
+        {likeCount}
+      </button>
+<button type="button" className={styles.engagementButton} onClick={() => setCommentsOpen((prev) => !prev)}>
+  <img src="/icon-comment.svg" alt="" className={styles.engagementIcon} />
+  {liveCommentCount ?? post.commentCount}
+</button>
+<button
+  type="button"
+  className={`${styles.engagementButton} ${styles.shareButton}`}
+  onClick={handleShare}
+  aria-label={justCopied ? 'Link copied' : 'Share post'}
+>
+  <img src="/icon-share.svg" alt="" className={styles.engagementIcon} />
+</button>
       </div>
 
       {commentsOpen && <CommentSection postId={post.id} onCountChange={setLiveCommentCount} />}

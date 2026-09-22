@@ -18,12 +18,12 @@
 }
 
 .md {
-  padding: 0.65rem 1.25rem;
+  padding: 0.5rem 1rem;
   font-size: var(--font-size-md);
 }
 
 .sm {
-  padding: 0.4rem 0.85rem;
+  padding: 0.5rem;
   font-size: var(--font-size-sm);
 }
 

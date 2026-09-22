@@ -30,3 +30,15 @@
   justify-content: flex-end;
   gap: var(--spacing-xs);
 }
+
+.actionIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
