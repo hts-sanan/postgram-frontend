@@ -33,7 +33,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...rest}
       >
         {isLoading && <Spinner size="sm" />}
-        <span className={isLoading ? styles.hiddenLabel : undefined}>{children}</span>
+        {children}
       </button>
     );
   },

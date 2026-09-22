@@ -15,7 +15,7 @@ export function HomePage() {
       <PostComposer />
       <FeedList
         state={state}
-        onToggleLike={(postId) => void toggleLike(postId)}
+        onToggleLike={toggleLike}
         onUpdate={updatePost}
         onDelete={deletePost}
       />

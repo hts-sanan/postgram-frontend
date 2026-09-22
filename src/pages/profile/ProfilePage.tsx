@@ -46,7 +46,7 @@ export function ProfilePage() {
 
       <FeedList
         state={state}
-        onToggleLike={(postId) => void toggleLike(postId)}
+        onToggleLike={toggleLike}
         onUpdate={updatePost}
         onDelete={deletePost}
         onCreatePost={() => openCreatePost('compose')}
